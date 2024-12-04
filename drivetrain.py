@@ -5,11 +5,11 @@ from wpimath.controller import SimpleMotorFeedforwardMeters
 
 class Constants():
     def __init__(self):
-        kS = 0
-        kV = 2.54
-        kA = 0.37
-        TOP_SPEED = 4.96
-        WHEELBASE = 24.375
+        self.kS = 0
+        self.kV = 2.54
+        self.kA = 0.37
+        self.TOP_SPEED = 4.96
+        self.WHEELBASE = 24.375
 
 const = Constants()
 
