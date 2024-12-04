@@ -8,6 +8,7 @@
 import wpilib
 import wpilib.drive
 import math
+import drivetrain
 
 class MyRobot(wpilib.TimedRobot):
     """
@@ -18,37 +19,21 @@ class MyRobot(wpilib.TimedRobot):
     def robotInit(self):
         """Robot initialization function"""
         # Define motors
-        leftMotor = wpilib.VictorSP(0)
-        rightMotor = wpilib.VictorSP(1)
-
-        self.robotDrive = wpilib.drive.DifferentialDrive(leftMotor, rightMotor)
         self.driverController = wpilib.XboxController(0)
 
-        # calibrate safety settings
-        self.robotDrive.setSafetyEnabled(False)
-
-        self.timer = wpilib.Timer()
-
-        # We need to invert one side of the drivetrain so that positive voltages
-        # result in both sides moving forward. Depending on how your robot's
-        # gearbox is constructed, you might have to invert the left side instead.
-        rightMotor.setInverted(False)
-        leftMotor.setInverted(True)
-
     def autonomousInit(self):
-        self.timer.restart()
+        self.drivetrain = drivetrain.DriveTrain()
+
+        self.drivetrain.timer.restart()
         self.run = 1
 
     def autonomousPeriodic(self):
         # do a square
         if self.run > 0:
             for i in range(4):
-                if self.timer.get() < 1:
-                    self.robotDrive.arcadeDrive(0.5, 0, squareInputs=False)
-                elif self.timer.get() < 1.45:
-                    self.robotDrive.arcadeDrive(0, -0.5, squareInputs=False)
-                if self.timer.get() > 1.45:
-                    self.timer.restart()
+                self.drivetrain.driveForward(5)
+                self.drivetrain.turnOnSelf(90)
+
             self.run = 0
 
     def teleopPeriodic(self):
@@ -71,9 +56,9 @@ class MyRobot(wpilib.TimedRobot):
                 left_bumper = 0
         
         if left_bumper == 0:
-            self.robotDrive.setMaxOutput(0.7)
+            self.drivetrain.robotDrive.setMaxOutput(0.7)
         elif left_bumper == 1:
-            self.robotDrive.setMaxOutput(1.0)
+            self.drivetrain.robotDrive.setMaxOutput(1.0)
 
         # set drive mode based on triggers
         if right_trigger > 0 and left_trigger <= 0:
@@ -103,16 +88,16 @@ class MyRobot(wpilib.TimedRobot):
 
         # powers motors based on the drive mode
         if drive_mode == 0:
-            self.robotDrive.arcadeDrive(
+            self.drivetrain.robotDrive.arcadeDrive(
                 left_stick, right_stick
             )
         elif drive_mode == 1:
-            self.robotDrive.tankDrive(
+            self.drivetrain.robotDrive.tankDrive(
                 left_stick, right_stick
             )
         # safety condition
         elif drive_mode == 2:
-            self.robotDrive.arcadeDrive(
+            self.drivetrain.robotDrive.arcadeDrive(
                 0, 0
             )
 
