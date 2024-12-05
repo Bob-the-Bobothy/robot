@@ -40,18 +40,18 @@ class DriveTrain():
         self.leftMotor.stopMotor
         self.rightMotor.stopMotor
     
-    def driveForward(self, distance: float):
-        self.driveTime = distance / const.TOP_SPEED
-        self.leftSpeed = const.TOP_SPEED
-        self.rightSpeed = const.TOP_SPEED
+    def driveForward(self, distance: float, speed=const.TOP_SPEED: float):
+        self.driveTime = distance / speed
+        self.leftSpeed = speed
+        self.rightSpeed = speed
         self.timer.reset()
 
         self.driveMotors(self.leftSpeed, self.rightSpeed, self.driveTime)
 
-    def turnOnSelf(self, angle):
-        self.distance = 2 * math.pi * (const.WHEELBASE / 2) * (angle / 360)
-        self.driveTime = self.distance / const.TOP_SPEED
-        self.leftSpeed = const.TOP_SPEED
-        self.rightSpeed = -1 * const.TOP_SPEED
+    def turnOnSelf(self, angle, speed=const.TOP_SPEED: float):
+        self.distance = math.pi * const.WHEELBASE * (angle / 360)
+        self.driveTime = self.distance / speed
+        self.leftSpeed = speed
+        self.rightSpeed = -1 * speed
 
         self.driveMotors(self.leftSpeed, self.rightSpeed, self.driveTime)

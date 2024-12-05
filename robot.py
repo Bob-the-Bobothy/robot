@@ -33,10 +33,12 @@ class MyRobot(wpilib.TimedRobot):
         # do a square
         if self.run > 0:
             for i in range(4):
-                self.drivetrain.driveForward(5)
-                self.drivetrain.turnOnSelf(90)
+                self.drivetrain.driveForward(5, 2)
+                self.drivetrain.turnOnSelf(90, 2)
 
             self.run = 0
+        
+        self.drivetrain.robotDrive.arcadeDrive(0, 0)
 
     def teleopPeriodic(self):
         # Drive with split arcade style
