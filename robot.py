@@ -20,10 +20,9 @@ class MyRobot(wpilib.TimedRobot):
         """Robot initialization function"""
         # Define motors
         self.driverController = wpilib.XboxController(0)
-
-    def autonomousInit(self):
         self.drivetrain = drivetrain.DriveTrain()
 
+    def autonomousInit(self):
         self.drivetrain.timer.restart()
         self.run = 1
 
