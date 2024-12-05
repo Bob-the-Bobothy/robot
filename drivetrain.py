@@ -27,6 +27,8 @@ class DriveTrain():
 
         self.rightMotor.setInverted(False)
         self.leftMotor.setInverted(True)
+        
+        self.robotDrive.setSafetyEnabled(False)
     
     def driveMotors(self, leftVelocity: float, rightVelocity: float, time):
         self.timer.restart()

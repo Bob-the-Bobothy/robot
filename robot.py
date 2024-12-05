@@ -21,6 +21,9 @@ class MyRobot(wpilib.TimedRobot):
         # Define motors
         self.driverController = wpilib.XboxController(0)
         self.drivetrain = drivetrain.DriveTrain()
+        
+    def robotPeriodic(self):
+        self.drivetrain.robotDrive.feed()
 
     def autonomousInit(self):
         self.drivetrain.timer.restart()
