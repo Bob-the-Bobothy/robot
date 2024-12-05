@@ -40,7 +40,7 @@ class DriveTrain():
         self.leftMotor.stopMotor
         self.rightMotor.stopMotor
     
-    def driveForward(self, distance: float, speed=const.TOP_SPEED: float):
+    def driveForward(self, distance: float, speed=const.TOP_SPEED):
         self.driveTime = distance / speed
         self.leftSpeed = speed
         self.rightSpeed = speed
@@ -48,7 +48,7 @@ class DriveTrain():
 
         self.driveMotors(self.leftSpeed, self.rightSpeed, self.driveTime)
 
-    def turnOnSelf(self, angle, speed=const.TOP_SPEED: float):
+    def turnOnSelf(self, angle, speed=const.TOP_SPEED):
         self.distance = math.pi * const.WHEELBASE * (angle / 360)
         self.driveTime = self.distance / speed
         self.leftSpeed = speed
