@@ -9,6 +9,7 @@ import wpilib
 import wpilib.drive
 import math
 import drivetrain
+from drivetrain import Constants
 
 class MyRobot(wpilib.TimedRobot):
     """
@@ -21,6 +22,7 @@ class MyRobot(wpilib.TimedRobot):
         # Define motors
         self.driverController = wpilib.XboxController(0)
         self.drivetrain = drivetrain.DriveTrain()
+        self.const = Constants()
         
     def robotPeriodic(self):
         self.drivetrain.robotDrive.feed()
@@ -34,11 +36,17 @@ class MyRobot(wpilib.TimedRobot):
         if self.run > 0:
             for i in range(4):
                 self.drivetrain.driveForward(5, 2)
-                self.drivetrain.turnOnSelf(90, 2)
+                self.drivetrain.turnOnSelf(90, self.const.TOP_SPEED)
 
             self.run = 0
         
         self.drivetrain.robotDrive.arcadeDrive(0, 0)
+
+    def teleopInit(self):
+        self.drivetrain.robotDrive.arcadeDrive(0, 0, False)
+
+    def teleopExit(self):
+        self.drivetrain.robotDrive.arcadeDrive(0, 0, False)
 
     def teleopPeriodic(self):
         # Drive with split arcade style

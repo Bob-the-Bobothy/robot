@@ -6,10 +6,10 @@ from wpimath.controller import SimpleMotorFeedforwardMeters
 class Constants():
     def __init__(self):
         self.kS = 0
-        self.kV = 2.54
-        self.kA = 0.37
-        self.THEORETICAL_TOP_SPEED = 4.96 #m/s
-        self.TOP_SPEED = 4.81 #m/s
+        self.kV = 2.38
+        self.kA = 0.52
+        self.THEORETICAL_TOP_SPEED = 5.2 #m/s
+        self.TOP_SPEED = 5.04 #m/s
         self.WHEELBASE = 0.619125 #meters
 
 const = Constants()
@@ -49,7 +49,7 @@ class DriveTrain():
         self.driveMotors(self.leftSpeed, self.rightSpeed, self.driveTime)
 
     def turnOnSelf(self, angle, speed=const.TOP_SPEED):
-        self.distance = math.pi * const.WHEELBASE * (angle / 360)
+        self.distance = 4.9 * math.pi * const.WHEELBASE * (angle / 360)
         self.driveTime = self.distance / speed
         self.leftSpeed = speed
         self.rightSpeed = -1 * speed
