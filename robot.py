@@ -7,9 +7,8 @@
 
 import wpilib
 import wpilib.drive
-import math
-import drivetrain
-from drivetrain import Constants
+import drivetrain # local file
+from drivetrain import Constants # local file
 
 class MyRobot(wpilib.TimedRobot):
     """
@@ -25,9 +24,11 @@ class MyRobot(wpilib.TimedRobot):
         self.const = Constants()
         
     def robotPeriodic(self):
+        # feed motor safety watchdog
         self.drivetrain.robotDrive.feed()
 
     def autonomousInit(self):
+        # define run variable
         self.drivetrain.timer.restart()
         self.run = 1
 
@@ -40,12 +41,15 @@ class MyRobot(wpilib.TimedRobot):
 
             self.run = 0
         
+        # stop at the end of code
         self.drivetrain.robotDrive.arcadeDrive(0, 0)
 
     def teleopInit(self):
+        # make sure it doesn't ghost drive
         self.drivetrain.robotDrive.arcadeDrive(0, 0, False)
 
     def teleopExit(self):
+        # make sure it doesn't ghost drive
         self.drivetrain.robotDrive.arcadeDrive(0, 0, False)
 
     def teleopPeriodic(self):

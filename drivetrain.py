@@ -5,6 +5,7 @@ from wpimath.controller import SimpleMotorFeedforwardMeters
 
 class Constants():
     def __init__(self):
+        # important constants to make motor feed accurate
         self.kS = 0
         self.kV = 2.38
         self.kA = 0.52
