@@ -42,6 +42,7 @@ class MyRobot(wpilib.TimedRobot):
         
         self.drivetrain.robotDrive.arcadeDrive(0, 0)
 
+    # motor safety stuff
     def teleopInit(self):
         self.drivetrain.robotDrive.arcadeDrive(0, 0, False)
 
@@ -60,17 +61,6 @@ class MyRobot(wpilib.TimedRobot):
         right_trigger = self.driverController.getRightTriggerAxis()
         left_trigger = self.driverController.getLeftTriggerAxis()
         left_bumper = 0
-
-        if self.driverController.getLeftBumper() > 0:
-            if left_bumper == 0:
-                left_bumper = 1
-            elif left_bumper == 1:
-                left_bumper = 0
-        
-        if left_bumper == 0:
-            self.drivetrain.robotDrive.setMaxOutput(0.7)
-        elif left_bumper == 1:
-            self.drivetrain.robotDrive.setMaxOutput(1.0)
 
         # set drive mode based on triggers
         if right_trigger > 0 and left_trigger <= 0:
