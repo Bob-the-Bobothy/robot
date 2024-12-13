@@ -7,7 +7,6 @@
 
 import wpilib
 import wpilib.drive
-import math
 import drivetrain
 from drivetrain import Constants
 
@@ -25,22 +24,23 @@ class MyRobot(wpilib.TimedRobot):
         self.const = Constants()
         
     def robotPeriodic(self):
+        # motor safety
         self.drivetrain.robotDrive.feed()
 
+    def disabledPeriodic(self):
+        # motor safety
+        self.drivetrain.robotDrive.arcadeDrive(0, 0, squareInputs=False)
+
     def autonomousInit(self):
+        # set up for square
         self.drivetrain.timer.restart()
         self.run = 1
 
     def autonomousPeriodic(self):
-        # do a square
+        # do a square twice
         if self.run > 0:
-            for i in range(4):
-                self.drivetrain.driveForward(5, 2)
-                self.drivetrain.turnOnSelf(90, self.const.TOP_SPEED)
-
-            self.run = 0
-        
-        self.drivetrain.robotDrive.arcadeDrive(0, 0)
+            self.drivetrain.square(length=3, speed=2)
+            self.run -= 1
 
     # motor safety stuff
     def teleopInit(self):

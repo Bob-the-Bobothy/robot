@@ -8,9 +8,9 @@ class Constants():
     def __init__(self):
         self.kS = 0
         self.kV = 2.38
-        self.kA = 0.52
-        self.THEORETICAL_TOP_SPEED = 5.2 #m/s
-        self.TOP_SPEED = 5.04 #m/s
+        self.kA = 0.28
+        self.THEORETICAL_TOP_SPEED = 5.33 #m/s
+        self.TOP_SPEED = 5.16 #m/s
         self.WHEELBASE = 0.619125 #meters
 
 const = Constants()
@@ -18,7 +18,7 @@ const = Constants()
 # whole system for auto and teleop
 class DriveTrain():
     def __init__(self):
-        # define variables
+        # define variables for drivetrain
         self.leftMotor = wpilib.VictorSP(0)
         self.rightMotor = wpilib.VictorSP(1)
 
@@ -60,7 +60,7 @@ class DriveTrain():
     def turnOnSelf(self, angle, speed=const.TOP_SPEED):
         # drive off angle and speed
 
-        self.distance = 4.9 * math.pi * const.WHEELBASE * (angle / 360)
+        self.distance = 4 * math.pi * const.WHEELBASE * (angle / 360)
         self.driveTime = self.distance / speed
 
         # make it turn instead of go straight
@@ -68,3 +68,14 @@ class DriveTrain():
         self.rightSpeed = -1 * speed
 
         self.driveMotors(self.leftSpeed, self.rightSpeed, self.driveTime)
+    
+    # pause for an amount of time
+    def stopDriving(self, time: float):
+        self.driveMotors(0, 0, time)
+
+    def square(self, length, speed):
+        for i in range(4):
+            self.driveForward(length, speed)
+            self.stopDriving(0.3)
+            self.turnOnSelf(90, 2)
+            self.stopDriving(0.3)
