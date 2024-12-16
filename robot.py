@@ -94,9 +94,7 @@ class MyRobot(wpilib.TimedRobot):
                 left_stick, right_stick
             )
         elif drive_mode == 1:
-            self.drivetrain.robotDrive.tankDrive(
-                left_stick, right_stick
-            )
+            self.drivetrain.tankDrive(left_stick, right_stick)
         # safety condition
         elif drive_mode == 2:
             self.drivetrain.robotDrive.arcadeDrive(
