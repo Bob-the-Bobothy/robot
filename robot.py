@@ -7,6 +7,8 @@
 
 import wpilib
 import wpilib.drive
+from wpilib import SmartDashboard
+
 import drivetrain
 from drivetrain import Constants
 
@@ -23,6 +25,20 @@ class MyRobot(wpilib.TimedRobot):
         self.drivetrain = drivetrain.DriveTrain()
         self.const = Constants()
         
+        self.autoChooser = wpilib.SendableChooser()
+        self.driveChooser = wpilib.SendableChooser()
+        
+        self.autoChooser.setDefaultOption("Stop", "stop")
+        self.autoChooser.addOption("Square", "square")
+        self.autoChooser.addOption("Spin", "spin")
+        
+        self.driveChooser.setDefaultOption("Stop", "stop")
+        self.driveChooser.addOption("Arcade", "arcade")
+        self.driveChooser.addOption("Tank", "tank")
+        
+        SmartDashboard.putData("Auto Mode", self.autoChooser)
+        SmartDashboard.putData("Drive Mode", self.driveChooser)
+        
     def robotPeriodic(self):
         # motor safety
         self.drivetrain.robotDrive.feed()
@@ -35,16 +51,26 @@ class MyRobot(wpilib.TimedRobot):
         # set up for square
         self.drivetrain.timer.restart()
         self.run = 1
+        
+        self.autoSelected = self.autoChooser.getSelected()
+        print("Auto selected: " + self.autoSelected)
 
     def autonomousPeriodic(self):
         # do a square twice
-        if self.run > 0:
-            self.drivetrain.square(length=3, speed=2)
-            self.run -= 1
+        match self.autoSelected:
+            case "square":
+                self.drivetrain.square(length=3, speed=2)
+            case "spin":
+                self.drivetrain.robotDrive.arcadeDrive(0, 1, squareInputs=False)
+            case _:
+                self.drivetrain.robotDrive.arcadeDrive(0, 0, squareInputs=False)
 
     # motor safety stuff
     def teleopInit(self):
         self.drivetrain.robotDrive.arcadeDrive(0, 0, False)
+        
+        self.driveSelected = self.driveChooser.getSelected()
+        print("Drive selected: " + self.driveSelected)
 
     def teleopExit(self):
         self.drivetrain.robotDrive.arcadeDrive(0, 0, False)
@@ -54,22 +80,21 @@ class MyRobot(wpilib.TimedRobot):
         # That means that the Y axis of the left stick moves forward
         # and backward, and the X of the right stick turns left and right.
 
-        # establish a variable to differentiate between tank and arcade drive
-        drive_mode = 0
-
         # controller mapping
         right_trigger = self.driverController.getRightTriggerAxis()
-        left_trigger = self.driverController.getLeftTriggerAxis()
-        left_bumper = 0
 
         # set drive mode based on triggers
-        if right_trigger > 0 and left_trigger <= 0:
-            drive_mode = 0
-        elif left_trigger > 0 and right_trigger <= 0:
-            drive_mode = 1
-        else: # if both buttons are pressed it turns off
+        if right_trigger > 0:
+            match self.driveSelected:
+                case "arcade":
+                    drive_mode = 0
+                case "tank":
+                    drive_mode = 1
+                case _:
+                    drive_mode = 2
+        else:
             drive_mode = 2
-
+            
         # stick reversing based on drive mode
         if drive_mode == 0:
             right_stick = 1 * self.driverController.getRightX()

@@ -14,14 +14,47 @@
       "ypos": "23"
     }
   },
+  "Table": {
+    "0x965B9C9E,2": {
+      "Column 0  Width": "130",
+      "Column 1  Weight": "1.0000",
+      "RefScale": "13"
+    },
+    "0xE56EC1C2,4": {
+      "Column 0  Weight": "1.0000",
+      "Column 1  Weight": "1.0000",
+      "Column 2  Weight": "1.0000",
+      "Column 3  Weight": "1.0000"
+    }
+  },
   "Window": {
+    "###/SmartDashboard/Auto Command": {
+      "Collapsed": "0",
+      "Pos": "172,73",
+      "Size": "254,54"
+    },
+    "###/SmartDashboard/Auto Mode": {
+      "Collapsed": "0",
+      "Pos": "137,58",
+      "Size": "254,54"
+    },
+    "###/SmartDashboard/Auto choices": {
+      "Collapsed": "0",
+      "Pos": "230,43",
+      "Size": "254,54"
+    },
+    "###/SmartDashboard/Drive Mode": {
+      "Collapsed": "0",
+      "Pos": "455,76",
+      "Size": "254,54"
+    },
     "###FMS": {
       "Collapsed": "0",
       "Pos": "5,540",
       "Size": "169,184"
     },
     "###Joysticks": {
-      "Collapsed": "0",
+      "Collapsed": "1",
       "Pos": "240,760",
       "Size": "796,155"
     },
@@ -32,7 +65,7 @@
     },
     "###NetworkTables Info": {
       "Collapsed": "0",
-      "Pos": "250,130",
+      "Pos": "251,177",
       "Size": "750,145"
     },
     "###Other Devices": {
