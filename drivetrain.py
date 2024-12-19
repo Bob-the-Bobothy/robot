@@ -84,12 +84,4 @@ class DriveTrain():
             self.stopDriving(0.3)
             self.turnOnSelf(90, 2)
             self.stopDriving(0.3)
-
-    def circle(self, angle, speed):
-        self.distance = math.pi * const.WHEELBASE * (angle / 360)
-        self.driveTime = self.distance / speed
-
-        self.leftSpeed = 0
-        self.rightSpeed = speed
-        
-        self.driveMotors(self.leftSpeed, self.rightSpeed, self.driveTime)
+            
