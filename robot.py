@@ -32,11 +32,14 @@ class MyRobot(wpilib.TimedRobot):
         self.autoChooser.addOption("Square", "square")
         self.autoChooser.addOption("Spin", "spin")
         
+        self.autoChooser.onChange(self.update)
+        self.driveChooser.onChange(self.update)
+        
         self.driveChooser.setDefaultOption("Stop", "stop")
         self.driveChooser.addOption("Arcade", "arcade")
         self.driveChooser.addOption("Tank", "tank")
         
-        SmartDashboard.putData("Auto Mode", self.autoChooser)
+        SmartDashboard.putData("Auto Mode", self.autoChooser)        
         SmartDashboard.putData("Drive Mode", self.driveChooser)
         
     def robotPeriodic(self):
@@ -46,6 +49,10 @@ class MyRobot(wpilib.TimedRobot):
     def disabledPeriodic(self):
         # motor safety
         self.drivetrain.robotDrive.arcadeDrive(0, 0, squareInputs=False)
+        
+    def update(self, input):
+        self.autoSelected = input
+        self.driveSelected = input
 
     def autonomousInit(self):
         # set up for square
@@ -57,13 +64,14 @@ class MyRobot(wpilib.TimedRobot):
 
     def autonomousPeriodic(self):
         # do a square twice
-        match self.autoSelected:
-            case "square":
-                self.drivetrain.square(length=3, speed=2)
-            case "spin":
-                self.drivetrain.robotDrive.arcadeDrive(0, 1, squareInputs=False)
-            case _:
-                self.drivetrain.robotDrive.arcadeDrive(0, 0, squareInputs=False)
+        if self.autoSelected == "stop":
+            self.drivetrain.robotDrive.arcadeDrive(0, 0, squareInputs=False)
+        else:
+            match self.autoSelected:
+                case "square":
+                    self.drivetrain.square(length=3, speed=2)
+                case "spin":
+                    self.drivetrain.robotDrive.arcadeDrive(0, 1, squareInputs=False)
 
     # motor safety stuff
     def teleopInit(self):
@@ -90,7 +98,7 @@ class MyRobot(wpilib.TimedRobot):
                     drive_mode = 0
                 case "tank":
                     drive_mode = 1
-                case _:
+                case "stop":
                     drive_mode = 2
         else:
             drive_mode = 2

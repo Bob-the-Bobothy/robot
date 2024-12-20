@@ -1,5 +1,10 @@
 {
   "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    },
     "PWM Outputs": {
       "window": {
         "visible": true
