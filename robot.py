@@ -5,13 +5,17 @@
 # the WPILib BSD license file in the root directory of this project.
 #
 
-import wpilib
 import magicbot
+import wpilib
+from wpilib import SmartDashboard
+
 from components.drivetrain import Drivetrain
-from components.intake import Intake
 from components.hood import Hood
+from components.intake import Intake
 from components.shooter import Shooter
+from util.helper_scripts import clamp
 from controllers.drive import Drive
+
 
 class MyRobot(magicbot.MagicRobot):
     
@@ -28,17 +32,36 @@ class MyRobot(magicbot.MagicRobot):
         self.shooter_motor = wpilib.PWMSparkMax(9)
         self.intake_motor = wpilib.PWMVictorSPX(8)
         self.hood_motor = wpilib.PWMSparkMax(7)
-        self.clamp = lambda n, minn, maxn: max(min(maxn, n), minn)
+        self.drive_motors = (wpilib.VictorSP(0), wpilib.VictorSP(1))
+
+        # smartdashboard stuff
+        self.drive_chooser = wpilib.SendableChooser()
+        self.drive_chooser.setDefaultOption("None", "none")
+        self.drive_chooser.addOption("Tank Drive", "tank")
+        self.drive_chooser.addOption("Arcade Drive", "arcade")
+
+        SmartDashboard.putData(self.drive_chooser)
+        
         
     def teleopInit(self):
         self.driver = wpilib.XboxController(0)
         self.gunner = wpilib.XboxController(1)
-        self.mode = magicbot.tunable("none")
-        self.drive_speed = self.clamp(magicbot.tunable(0.7), 0, 1)
     
     def teleopPeriodic(self):
-        match self.mode:
+        self.shooter_cont = self.gunner.getRightTriggerAxis() - self.gunner.getLeftTriggerAxis()
+        self.hood_cont = self.gunner.getLeftY()
+        self.intake_cont = int(self.gunner.getRightBumper()) - int(self.gunner.getLeftBumper())
+
+        self.shooter.enable(self.shooter_cont)
+        self.intake.feed(self.intake_cont)
+
+        match self.drive_chooser.getSelected():
             case "tank":
-                self.drivetrain.arcadeDrive(self.driver.getLeftY() * self.drive_speed, self.driver.getRightY() * self.drive_speed)
+                self.drive.drive(self.driver.getLeftY(), self.driver.getRightY(), "tank")
             case "arcade":
-                self.drivetrain.arcadeDrive(self.driver.getLeftY() * self.drive_speed, self.driver.getRightX() * self.drive_speed)
+                self.drive.drive(self.driver.getLeftY(), self.driver.getRightX(), "arcade")
+            case _:
+                # motor safety - blank input stops motors
+                self.drive.drive()
+        
+

@@ -1,5 +1,8 @@
-import wpilib
 import magicbot
+import wpilib
+
+from util.helper_scripts import clamp
+
 
 class Intake:
     intake_motor: wpilib.PWMVictorSPX
@@ -12,6 +15,9 @@ class Intake:
     def feed(self, control=1):
         self.enabled = True
         self.control = control
+
+    def set_speed(self, new_value):
+        self.intake_speed = clamp(new_value, 0, 1)
     
     def execute(self):
         if self.enabled:

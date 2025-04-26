@@ -1,5 +1,8 @@
-import wpilib
 import magicbot
+import wpilib
+
+from util.helper_scripts import clamp
+
 
 class Hood:
     hood_motor: wpilib.PWMSparkMax
@@ -12,6 +15,9 @@ class Hood:
     def rotate(self, control=0):
         self.enabled = True
         self.control = control
+
+    def set_speed(self, new_value):
+        self.hood_speed = clamp(new_value, 0, 1)
     
     def execute(self):
         if self.enabled:
