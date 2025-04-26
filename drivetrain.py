@@ -12,6 +12,7 @@ class Constants():
         self.THEORETICAL_TOP_SPEED = 5.33 #m/s
         self.TOP_SPEED = 5.16 #m/s
         self.WHEELBASE = 0.619125 #meters
+        self.ANGULAR_TOP_SPEED = 8.3343 * 2 #radians/s
 
 const = Constants()
 

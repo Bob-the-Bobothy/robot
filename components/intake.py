@@ -9,12 +9,13 @@ class Intake:
     def __init__(self):
         self.enabled = False
     
-    def enable(self):
+    def feed(self, control=1):
         self.enabled = True
+        self.control = control
     
     def execute(self):
         if self.enabled:
-            self.intake_motor.set(self.intake_speed)
+            self.intake_motor.set(self.intake_speed * self.control)
         else:
             self.intake_motor.set(0)
 

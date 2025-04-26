@@ -121,3 +121,10 @@ dmypy.json
 # pycaches
 __pycache__/
 .pycache/
+
+# my stuff :))))))
+.wpilib/
+networktables.json
+simgui-ds.json
+simgui-window.json
+simgui.json

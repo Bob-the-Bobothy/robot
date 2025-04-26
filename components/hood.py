@@ -9,12 +9,13 @@ class Hood:
     def __init__(self):
         self.enabled = False
     
-    def enable(self):
+    def rotate(self, control=0):
         self.enabled = True
+        self.control = control
     
     def execute(self):
         if self.enabled:
-            self.hood_motor.set(self.intake_speed)
+            self.hood_motor.set(self.intake_speed * self.control)
         else:
             self.hood_motor.set(0)
             
