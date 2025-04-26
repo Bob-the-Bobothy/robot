@@ -12,7 +12,7 @@ class Constants():
         self.WIDTH: inches = 28 #inches
         self.LENGTH: inches = 28 #inches
         self.WHEEL_DIAMETER: inches = 6 #inches
-        self.WEIGHT = 50 #pounds
+        self.WEIGHT = 45 #pounds
         self.DRIVETRAIN_RATIO = 8.46 #input/output
         self.SHOOTER_INERTIA: kilogram_square_meters = 0.0023820868 # meters^2 kilograms
         self.SHOOTER_RATIO = 2 / 3 #input to output
