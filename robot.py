@@ -55,13 +55,15 @@ class MyRobot(magicbot.MagicRobot):
         self.shooter.enable(self.shooter_cont)
         self.intake.feed(self.intake_cont)
 
-        match self.drive_chooser.getSelected():
-            case "tank":
-                self.drive.drive(self.driver.getLeftY(), self.driver.getRightY(), "tank")
-            case "arcade":
-                self.drive.drive(self.driver.getLeftY(), self.driver.getRightX(), "arcade")
-            case _:
-                # motor safety - blank input stops motors
-                self.drive.drive()
-        
-
+        # safety enable
+        if self.driver.getRightTriggerAxis() > 0.5:
+            match self.drive_chooser.getSelected():
+                case "tank":
+                    self.drive.drive(self.driver.getLeftY(), self.driver.getRightY(), "tank")
+                case "arcade":
+                    self.drive.drive(self.driver.getRightX(), self.driver.getLeftY(), "arcade")
+                case _:
+                    # motor safety - blank input stops motors
+                    self.drive.drive()
+        else:
+            self.drive.drive()
