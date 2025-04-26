@@ -59,22 +59,9 @@
               3
             ],
             "content": {
-              "_type": "Network Table Tree",
-              "_source0": "network_table:///components",
-              "_title": "/components",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "10,3": {
-            "size": [
-              3,
-              3
-            ],
-            "content": {
               "_type": "Graph",
               "_source0": "network_table:///SmartDashboard/Field/Robot",
-              "_title": "/SmartDashboard/Field/Robot",
+              "_title": "Robot",
               "_glyph": 148,
               "_showGlyph": false,
               "Graph/Visible time": 30.0,
@@ -86,6 +73,74 @@
               "Visible data/SmartDashboard/Field/Robot[0]": true,
               "Visible data/SmartDashboard/Field/Robot[1]": true,
               "Visible data/SmartDashboard/Field/Robot[2]": true
+            }
+          },
+          "0,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///components/drive/drive_speed",
+              "_title": "Drive Speed",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Slider Settings/Min": 0.0,
+              "Slider Settings/Max": 1.0,
+              "Slider Settings/Block increment": 0.0625,
+              "Visuals/Display value": true
+            }
+          },
+          "0,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///components/intake/intake_speed",
+              "_title": "Intake Speed",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Slider Settings/Min": -1.0,
+              "Slider Settings/Max": 1.0,
+              "Slider Settings/Block increment": 0.0625,
+              "Visuals/Display value": true
+            }
+          },
+          "1,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///components/shooter/shoot_speed",
+              "_title": "Shooter Speed",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Slider Settings/Min": 0.0,
+              "Slider Settings/Max": 1.0,
+              "Slider Settings/Block increment": 0.0625,
+              "Visuals/Display value": true
+            }
+          },
+          "1,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///components/hood/hood_speed",
+              "_title": "Hood Speed",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Slider Settings/Min": 0.0,
+              "Slider Settings/Max": 1.0,
+              "Slider Settings/Block increment": 0.0625,
+              "Visuals/Display value": true
             }
           }
         }
