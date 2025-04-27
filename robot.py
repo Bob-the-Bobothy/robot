@@ -17,6 +17,8 @@ from components.intake import Intake
 from components.shooter import Shooter
 from controllers.drive import Drive
 from util.helper_scripts import clamp
+from util.constants import Constants
+from util.helper_scripts import squareInput
 
 
 class MyRobot(magicbot.MagicRobot):
@@ -37,7 +39,7 @@ class MyRobot(magicbot.MagicRobot):
 
         self.left_motor = wpilib.VictorSP(0)
         self.right_motor = wpilib.VictorSP(1)
-        self.right_motor.setInverted(True)
+        self.left_motor.setInverted(True)
 
         self.drive_motors = (self.left_motor, self.right_motor)
 
@@ -50,41 +52,52 @@ class MyRobot(magicbot.MagicRobot):
         SmartDashboard.putData(self.drive_chooser)
         
     def teleopInit(self):
-        self.driver = wpilib.XboxController(0)
-        self.gunner = wpilib.XboxController(1)
+        if wpilib.DriverStation.getJoystickIsXbox(0):
+            self.driver = wpilib.XboxController(0)
+        else:
+            self.logger.warning("Driver controller is not connected, driving will not work")
+        if wpilib.DriverStation.getJoystickIsXbox(1):
+            self.gunner = wpilib.XboxController(1)
+        else:
+            self.logger.warning("Gunner controller not connected, shooter will not work")
     
     def teleopPeriodic(self):
         with self.consumeExceptions():
-            self.shooter_cont = self.gunner.getRightTriggerAxis() - self.gunner.getLeftTriggerAxis()
-            self.hood_cont = round(self.gunner.getLeftY(), 2)
-            self.intake_cont = int(self.gunner.getRightBumper()) - int(self.gunner.getLeftBumper())
+            if "self.gunner" in globals():
+                self.shooter_cont = self.gunner.getRightTriggerAxis() - self.gunner.getLeftTriggerAxis()
+                self.hood_cont = round(self.gunner.getLeftY(), 2)
+                self.intake_cont = int(self.gunner.getRightBumper()) - int(self.gunner.getLeftBumper())
 
-            self.shooter.enable(self.shooter_cont)
-            self.intake.enable(self.intake_cont)
-            self.hood.enable(self.hood_cont)
+                self.shooter.enable(self.shooter_cont)
+                self.intake.enable(self.intake_cont)
+                self.hood.enable(self.hood_cont)
+
+                # change shooter speeds with gunner controller
+                if self.gunner.getYButtonPressed():
+                    self.shooter.shoot_speed += 0.1
+                    self.shooter.shoot_speed = round(self.shooter.shoot_speed, 1)
+                
+                if self.gunner.getAButtonPressed():
+                    self.shooter.shoot_speed -= 0.1
+                    self.shooter.shoot_speed = round(self.shooter.shoot_speed, 1)
+                
+                self.shooter.shoot_speed += round(-self.gunner.getRightY(), 1) / 100
+
+                self.shooter.shoot_speed = clamp(self.shooter.shoot_speed, 0, 1)
 
             # safety enable
-            if self.driver.getRightTriggerAxis() > 0.5:
+            if self.driver.getRightTriggerAxis() > 0.1:
                 match self.drive_chooser.getSelected():
                     case "tank":
-                        self.drive.drive(-self.driver.getLeftY(), -self.driver.getRightY(), "tank")
+                        self.drive.drive("tank", self.driver.getLeftY(), self.driver.getRightY())
                     case "arcade":
-                        self.drive.drive(-self.driver.getLeftY(), -self.driver.getRightX(), "arcade")
+                        self.drive.drive("arcade", self.driver.getLeftY(), self.driver.getRightX())
                     case _:
                         # motor safety - blank input stops motors
                         self.drive.drive()
             else:
                 self.drive.drive()
 
-            # change shooter speeds with gunner controller
-            if self.gunner.getYButtonPressed():
-                self.shooter.shoot_speed += 0.1
-                self.shooter.shoot_speed = round(self.shooter.shoot_speed, 1)
-            
-            if self.gunner.getAButtonPressed():
-                self.shooter.shoot_speed -= 0.1
-                self.shooter.shoot_speed = round(self.shooter.shoot_speed, 1)
-            
-            self.shooter.shoot_speed += round(-self.gunner.getRightY(), 1) / 100
-
-            self.shooter.shoot_speed = clamp(self.shooter.shoot_speed, 0, 1)
+    def disabledPeriodic(self):
+        # motor safety
+        self.drive.stop()
