@@ -30,8 +30,8 @@
   "Window": {
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
-      "Pos": "605,24",
-      "Size": "862,429"
+      "Pos": "241,21",
+      "Size": "1239,622"
     },
     "###FMS": {
       "Collapsed": "0",
@@ -40,22 +40,22 @@
     },
     "###Joysticks": {
       "Collapsed": "0",
-      "Pos": "648,457",
+      "Pos": "26,747",
       "Size": "796,240"
     },
     "###Keyboard 0 Settings": {
       "Collapsed": "0",
-      "Pos": "1482,174",
+      "Pos": "1488,51",
       "Size": "300,560"
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "646,660",
+      "Pos": "871,660",
       "Size": "821,333"
     },
     "###NetworkTables Info": {
       "Collapsed": "0",
-      "Pos": "169,662",
+      "Pos": "855,839",
       "Size": "750,454"
     },
     "###Other Devices": {

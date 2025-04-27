@@ -12,13 +12,10 @@ class Intake:
     def __init__(self):
         self.enabled = False
     
-    def feed(self, control=1):
+    def enable(self, control=1):
         self.enabled = True
         self.control = control
 
-    def set_speed(self, new_value):
-        self.intake_speed = clamp(new_value, 0, 1)
-    
     def execute(self):
         if self.enabled:
             self.intake_motor.set(self.intake_speed * self.control)

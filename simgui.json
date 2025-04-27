@@ -47,7 +47,10 @@
   "NetworkTables": {
     "transitory": {
       "components": {
-        "open": true
+        "open": true,
+        "shooter": {
+          "open": true
+        }
       }
     }
   },

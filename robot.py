@@ -56,11 +56,12 @@ class MyRobot(magicbot.MagicRobot):
     def teleopPeriodic(self):
         with self.consumeExceptions():
             self.shooter_cont = self.gunner.getRightTriggerAxis() - self.gunner.getLeftTriggerAxis()
-            self.hood_cont = self.gunner.getLeftY()
+            self.hood_cont = round(self.gunner.getLeftY(), 2)
             self.intake_cont = int(self.gunner.getRightBumper()) - int(self.gunner.getLeftBumper())
 
             self.shooter.enable(self.shooter_cont)
-            self.intake.feed(self.intake_cont)
+            self.intake.enable(self.intake_cont)
+            self.hood.enable(self.hood_cont)
 
             # safety enable
             if self.driver.getRightTriggerAxis() > 0.5:
@@ -74,3 +75,16 @@ class MyRobot(magicbot.MagicRobot):
                         self.drive.drive()
             else:
                 self.drive.drive()
+
+            # change shooter speeds with gunner controller
+            if self.gunner.getYButtonPressed():
+                self.shooter.shoot_speed += 0.1
+                self.shooter.shoot_speed = round(self.shooter.shoot_speed, 1)
+            
+            if self.gunner.getAButtonPressed():
+                self.shooter.shoot_speed -= 0.1
+                self.shooter.shoot_speed = round(self.shooter.shoot_speed, 1)
+            
+            self.shooter.shoot_speed += round(-self.gunner.getRightY(), 1) / 100
+
+            self.shooter.shoot_speed = clamp(self.shooter.shoot_speed, 0, 1)
