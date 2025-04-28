@@ -32,7 +32,6 @@ class DriveTrain():
         self.leftMotor.setInverted(True)
         
         self.robotDrive.setSafetyEnabled(False)
-        self.robotDrive.setMaxOutput(0.7)
     
     def driveMotors(self, leftVelocity: float, rightVelocity: float, time):
         # drive motors for a given time and speed

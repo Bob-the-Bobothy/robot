@@ -1,5 +1,10 @@
 {
   "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    },
     "PWM Outputs": {
       "window": {
         "visible": true
@@ -8,10 +13,54 @@
   },
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto Command": "String Chooser",
+      "/SmartDashboard/Auto Mode": "String Chooser",
+      "/SmartDashboard/Auto choices": "String Chooser",
+      "/SmartDashboard/Drive Mode": "String Chooser"
+    },
+    "windows": {
+      "/SmartDashboard/Auto Mode": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Drive Mode": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "Auto choices": {
+          "open": true,
+          "string[]##v_/SmartDashboard/Auto choices/options": {
+            "open": true
+          }
+        },
+        "open": true
+      }
     }
   },
   "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "Connections": {
+      "open": true
+    },
+    "Server": {
+      "Publishers": {
+        "open": true
+      },
+      "open": true
+    },
     "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }
