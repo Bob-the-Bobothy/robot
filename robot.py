@@ -12,6 +12,8 @@ from wpilib import SmartDashboard
 import drivetrain
 from drivetrain import Constants
 
+import shooter
+
 class MyRobot(wpilib.TimedRobot):
     """
     This is a demo program showing the use of the DifferentialDrive class.
@@ -22,11 +24,14 @@ class MyRobot(wpilib.TimedRobot):
         """Robot initialization function"""
         # Define motors
         self.driverController = wpilib.XboxController(0)
+        self.gunner = wpilib.XboxController(1)
         self.drivetrain = drivetrain.DriveTrain()
         self.const = Constants()
+        self.shooter = shooter.Shooter()
         
         self.autoChooser = wpilib.SendableChooser()
         self.driveChooser = wpilib.SendableChooser()
+        self.maxOutput = 1
         
         self.autoChooser.setDefaultOption("Stop", "stop")
         self.autoChooser.addOption("Square", "square")
@@ -41,10 +46,36 @@ class MyRobot(wpilib.TimedRobot):
         
         SmartDashboard.putData("Auto Mode", self.autoChooser)        
         SmartDashboard.putData("Drive Mode", self.driveChooser)
+        SmartDashboard.putNumber("shooter", 1)
+
+        self.shooterSpeed = 1
+        self.intakeSpeed = 0.7
         
     def robotPeriodic(self):
         # motor safety
         self.drivetrain.robotDrive.feed()
+
+        if self.shooterSpeed > 1:
+            self.shooterSpeed = 1
+
+        if self.intakeSpeed > 1:
+            self.intakeSpeed = 1
+
+        if self.intakeSpeed < 0:
+            self.intakeSpeed = 0
+        
+        if self.shooterSpeed < 0:
+            self.shooterSpeed = 0
+
+        SmartDashboard.putNumber("shooter", self.shooterSpeed)
+        self.shooterSpeed = SmartDashboard.getNumber("shooter", 1)
+        SmartDashboard.putNumber("intake", self.intakeSpeed)
+        self.intakeSpeed = SmartDashboard.getNumber("intake", 1)
+
+        SmartDashboard.putNumber("robotomy", 5553)
+
+        SmartDashboard.putString("Max Output", f"{self.maxOutput * 100}%")
+        self.drivetrain.robotDrive.setMaxOutput(self.maxOutput)
 
     def disabledPeriodic(self):
         # motor safety
@@ -57,7 +88,6 @@ class MyRobot(wpilib.TimedRobot):
     def autonomousInit(self):
         # set up for square
         self.drivetrain.timer.restart()
-        self.run = 1
         
         self.autoSelected = self.autoChooser.getSelected()
         print("Auto selected: " + self.autoSelected)
@@ -89,19 +119,40 @@ class MyRobot(wpilib.TimedRobot):
         # and backward, and the X of the right stick turns left and right.
 
         # controller mapping
-        right_trigger = self.driverController.getRightTriggerAxis()
+        gRightTrigger = self.gunner.getRightTriggerAxis()
+        gLeftTrigger = self.gunner.getLeftTriggerAxis()
+
+        gLeftBumper = int(self.gunner.getLeftBumper())
+        gRightBumper = int(self.gunner.getRightBumper())
+
+        shooterSpeedCont = (int(self.gunner.getYButtonPressed()) - int(self.gunner.getAButtonPressed()))
+        self.shooterSpeed += shooterSpeedCont * .05
+
+        intakeSpeedCont = (int(self.gunner.getBButtonPressed()) - int(self.gunner.getXButtonPressed()))
+        self.intakeSpeed += intakeSpeedCont * .05
+
+
+        left_bumper = self.driverController.getLeftBumper()
+        
+        shooter_cont = gRightTrigger - gLeftTrigger
+        intake_cont = gRightBumper - gLeftBumper
+
+        self.shooter.shoot(shooter_cont * self.shooterSpeed)
+        self.shooter.intake(intake_cont * self.intakeSpeed)
+
+        if left_bumper > 0:
+            self.maxOutput = 1.0
+        else:
+            self.maxOutput = 0.7
 
         # set drive mode based on triggers
-        if right_trigger > 0:
-            match self.driveSelected:
-                case "arcade":
-                    drive_mode = 0
-                case "tank":
-                    drive_mode = 1
-                case "stop":
-                    drive_mode = 2
-        else:
-            drive_mode = 2
+        match self.driveSelected:
+            case "arcade":
+                drive_mode = 0
+            case "tank":
+                drive_mode = 1
+            case "stop":
+                drive_mode = 2
             
         # stick reversing based on drive mode
         if drive_mode == 0:
