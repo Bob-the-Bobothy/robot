@@ -7,7 +7,7 @@ from util.helper_scripts import clamp
 class Hood:
     hood_motor: wpilib.PWMSparkMax
     
-    hood_speed = magicbot.tunable(0.25)
+    hood_speed = magicbot.tunable(0.1)
     
     def __init__(self):
         self.enabled = False

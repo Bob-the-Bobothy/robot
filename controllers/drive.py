@@ -13,7 +13,7 @@ class Drive:
     def __init__(self):
         self.enabled = False
 
-    def drive(self, mode="arcade", /, *args):
+    def drive(self, mode="tank", /, *args):
         """Converts multiple different inputs to ChassisSpeeds for driving
 
         Args:
