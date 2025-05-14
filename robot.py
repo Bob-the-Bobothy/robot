@@ -46,6 +46,10 @@ class MyRobot(magicbot.MagicRobot):
         self.drive_chooser.addOption("Tank Drive", "tank")
         self.drive_chooser.addOption("Arcade Drive", "arcade")
 
+        self.controller_chooser = wpilib.SendableChooser()
+        self.controller_chooser.setDefaultOption("Two Controllers", 2)
+        self.controller_chooser.addOption("Driver Only", 1)
+
         SmartDashboard.putData(self.drive_chooser)
         
     def teleopInit(self):
@@ -62,7 +66,7 @@ class MyRobot(magicbot.MagicRobot):
     
     def teleopPeriodic(self):
         with self.consumeExceptions():
-            if self.gunner != False:
+            if self.gunner != False and self.controller_chooser.getSelected() == 2:
                 self.shooter_cont = self.gunner.getRightTriggerAxis() - self.gunner.getLeftTriggerAxis()
                 self.intake_cont = int(self.gunner.getRightBumper()) - int(self.gunner.getLeftBumper())
 
@@ -79,19 +83,35 @@ class MyRobot(magicbot.MagicRobot):
                     self.shooter.shoot_speed = round(self.shooter.shoot_speed, 1)
                 
                 self.shooter.shoot_speed += round(-self.gunner.getRightY(), 1) / 100
-
                 self.shooter.shoot_speed = clamp(self.shooter.shoot_speed, 0, 1)
 
             # safety enable
             if self.driver != False:
-                self.hood_cont = self.driver.getLeftTriggerAxis() - self.driver.getRightTriggerAxis()
-                self.hood.enable(self.hood_cont)
+                if self.controller_chooser.getSelected() == 1:
+                    # one controller operation
+                    self.hood_cont = int(self.driver.getXButton()) - int(self.driver.getBButton())
+                    self.intake_cont = int(self.driver.getRightBumper()) - int(self.driver.getLeftBumper())
+                    self.shooter_cont = self.driver.getRightTriggerAxis() - self.driver.getLeftTriggerAxis()
 
-                if self.driver.getLeftBumperPressed():
-                    self.drive.drive_speed = 1.0
-                elif self.driver.getLeftBumperReleased():
-                    self.drive.drive_speed = 0.7
+                    self.intake.enable(self.intake_cont)
+                    self.shooter.enable(self.shooter_cont)
 
+                    if self.driver.getYButtonPressed():
+                        self.shooter.shoot_speed += 0.1
+                        self.shooter.shoot_speed = round(self.shooter.shoot_speed, 1)
+                    
+                    if self.driver.getAButtonPressed():
+                        self.shooter.shoot_speed -= 0.1
+                        self.shooter.shoot_speed = round(self.shooter.shoot_speed, 1)
+                else:
+                    # two controller operation
+                    self.hood_cont = self.driver.getLeftTriggerAxis() - self.driver.getRightTriggerAxis()
+
+                    if self.driver.getLeftBumperPressed():
+                        self.drive.drive_speed = 1.0
+                    elif self.driver.getLeftBumperReleased():
+                        self.drive.drive_speed = 0.7
+                
                 match self.drive_chooser.getSelected():
                     case "tank":
                         self.drive.drive("tank", self.driver.getLeftY(), self.driver.getRightY())
@@ -99,9 +119,12 @@ class MyRobot(magicbot.MagicRobot):
                         self.drive.drive("arcade", squareInput(-self.driver.getLeftY()), squareInput(self.driver.getRightX()))
                     case _:
                         # motor safety - blank input stops motors
-                        self.drive.drive()
+                        self.drive.stop()
+
+                self.hood.enable(self.hood_cont)
+
             else:
-                self.drive.drive()
+                self.drive.stop()
 
     def disabledPeriodic(self):
         # motor safety

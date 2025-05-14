@@ -19,4 +19,9 @@ class BallShooter(StateMachine):
     @timed_state(duration=1, must_finish=True)
     def firing(self):
         self.shooter.enable(control=1)
-        self.intake.feed(control=1)
+        self.intake.enable(control=1)
+
+    def stop(self):
+        self.shooter.enable(control=0)
+        self.intake.enable(control=0)
+        self.hood.enable(control=0)
