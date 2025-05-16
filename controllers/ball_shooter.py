@@ -4,24 +4,45 @@ from components.shooter import Shooter
 from components.hood import Hood
 from components.intake import Intake
 
-class BallShooter(StateMachine):
+class BallShooter:
     shooter: Shooter
     intake: Intake
     hood: Hood
+
+    def __init__(self):
+        self.enabled = False
+
+    def control(self, **kwargs):
+        """Control the ball shooter and hood based on inputs.
+
+        Args:
+            inputs (dict): Dictionary containing control inputs.
+        """
+        self.output = kwargs
+
+        self.enabled = True
     
-    def fire(self):
-        self.engage()
-        
-    @timed_state(first=True, duration=1.5, next_state="firing")
-    def prepare_to_fire(self):
-        self.shooter.enable(control=1)
-    
-    @timed_state(duration=1, must_finish=True)
-    def firing(self):
-        self.shooter.enable(control=1)
-        self.intake.enable(control=1)
+    def execute(self):
+        """Execute the control logic for the ball shooter and hood."""
+        if self.enabled:
+            # Control the shooter motor based on input
+            if "shooter" in self.output:
+                self.shooter.enable(control=self.output["shooter"])
+            else:
+                self.shooter.enable(control=0)
+
+            # Control the intake motor based on input
+            if "intake" in self.output:
+                self.intake.enable(control=self.output["intake"])
+            else:
+                self.intake.enable(control=0)
+
+            # Control the hood motor based on input
+            if "hood" in self.output:
+                self.hood.enable(control=self.output["hood"])
+            else:
+                self.hood.enable(control=0)
 
     def stop(self):
-        self.shooter.enable(control=0)
-        self.intake.enable(control=0)
-        self.hood.enable(control=0)
+        self.control(shooter=0, intake=0, hood=0)
+        self.enabled = False

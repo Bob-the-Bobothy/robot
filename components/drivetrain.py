@@ -17,7 +17,7 @@ class Drivetrain:
     chassis_speed = wpimath.kinematics.ChassisSpeeds(0, 0, 0)
     feed_forward = wpimath.controller.SimpleMotorFeedforwardMeters(const.kS, const.kV, const.kA)
     states = (0, 0)
-    iters = 100
+    iters = 10
     
     def __init__(self):
         self.enabled = False

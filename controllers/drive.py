@@ -17,7 +17,7 @@ class Drive:
         """Converts multiple different inputs to ChassisSpeeds for driving
 
         Args:
-            mode (str, optional): Teleop Drive Mode, necessary for stick driving. Defaults to "arcade".
+            mode (str, optional): Teleop Drive Mode, necessary for stick driving. Defaults to "tank".
 
         Raises:
             TypeError: If a non valid type positional arg is supplied or > 3 args supplied a TypeError will raise

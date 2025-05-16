@@ -14,6 +14,7 @@ from components.hood import Hood
 from components.intake import Intake
 from components.shooter import Shooter
 from controllers.drive import Drive
+from controllers.ball_shooter import BallShooter
 from util.helper_scripts import clamp
 from util.helper_scripts import squareInput
 
@@ -28,6 +29,7 @@ class MyRobot(magicbot.MagicRobot):
     
     # controllers
     drive: Drive
+    ball_shooter: BallShooter
     
     def createObjects(self):
         self.shooter_motor = wpilib.PWMSparkMax(9)
@@ -51,6 +53,7 @@ class MyRobot(magicbot.MagicRobot):
         self.controller_chooser.addOption("Driver Only", 1)
 
         SmartDashboard.putData(self.drive_chooser)
+        SmartDashboard.putData(self.controller_chooser)
         
     def teleopInit(self):
         if wpilib.DriverStation.getJoystickIsXbox(0):
@@ -61,7 +64,7 @@ class MyRobot(magicbot.MagicRobot):
         if wpilib.DriverStation.getJoystickIsXbox(1):
             self.gunner = wpilib.XboxController(1)
         else:
-            self.logger.warning("Gunner controller not connected, shooter will not work")
+            self.logger.warning("Gunner controller not connected, shooter will not work unless one controller mode is selected")
             self.gunner = False
     
     def teleopPeriodic(self):
@@ -87,7 +90,7 @@ class MyRobot(magicbot.MagicRobot):
 
             # safety enable
             if self.driver != False:
-                if self.controller_chooser.getSelected() == 1:
+                if self.controller_chooser.getSelected() == 1 or self.gunner == False:
                     # one controller operation
                     self.hood_cont = int(self.driver.getXButton()) - int(self.driver.getBButton())
                     self.intake_cont = int(self.driver.getRightBumper()) - int(self.driver.getLeftBumper())
