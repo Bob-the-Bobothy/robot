@@ -24,7 +24,7 @@ class DriveAndShoot(AutonomousStateMachine):
 
     @timed_state(must_finish=True, duration=2.0, next_state="stop")
     def shoot(self):
-        self.drive.drive("tank", -self.drive_speed, -self.drive_speed)
+        self.drive.drive("tank", self.drive_speed, self.drive_speed)
         self.ball_shooter.control(shooter=1, intake=1)
     
     @state
