@@ -139,6 +139,19 @@
               "Slider Settings/Block increment": 0.0625,
               "Visuals/Display value": true
             }
+          },
+          "0,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Split Button Chooser",
+              "_source0": "network_table:///SmartDashboard/SendableChooser[1]",
+              "_title": "Controllers",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }

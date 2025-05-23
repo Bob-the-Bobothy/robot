@@ -56,6 +56,9 @@ class MyRobot(magicbot.MagicRobot):
         SmartDashboard.putData(self.controller_chooser)
         
     def teleopInit(self):
+        self.intake.intake_speed = 0.7
+        self.hood.hood_speed = 0.2
+        self.shooter.shoot_speed = 1.0
         if wpilib.DriverStation.getJoystickIsXbox(0):
             self.driver = wpilib.XboxController(0)
         else:
