@@ -93,7 +93,7 @@ class MyRobot(magicbot.MagicRobot):
 
             # safety enable
             if self.driver != False:
-                if self.controller_chooser.getSelected() == 1 or self.gunner == False:
+                if self.controller_chooser.getSelected() == 1:
                     # one controller operation
                     self.hood_cont = int(self.driver.getXButton()) - int(self.driver.getBButton())
                     self.intake_cont = int(self.driver.getRightBumper()) - int(self.driver.getLeftBumper())

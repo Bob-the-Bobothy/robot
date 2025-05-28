@@ -11,6 +11,7 @@ class BallShooter:
 
     def __init__(self):
         self.enabled = False
+        self.prev_speed = (self.shooter.shoot_speed, self.intake.intake_speed, self.hood.hood_speed)
 
     def control(self, **kwargs):
         """Control the ball shooter and hood based on inputs.
@@ -22,8 +23,6 @@ class BallShooter:
 
         self.enabled = True
 
-        self.prev_speed = (self.shooter.shoot_speed, self.intake.intake_speed, self.hood.hood_speed)
-    
     def execute(self):
         """Execute the control logic for the ball shooter and hood."""
         if self.enabled:
